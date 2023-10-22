@@ -4,10 +4,10 @@ export const getGlobalData = () => {
     : 'Oscar Hernández - Josué Romero';
   const blogTitle = process.env.BLOG_TITLE
     ? decodeURI(process.env.BLOG_TITLE)
-    : 'Next.js Blog Theme';
+    : 'SIG - Proyecto 2';
   const footerText = process.env.BLOG_FOOTER_TEXT
     ? decodeURI(process.env.BLOG_FOOTER_TEXT)
-    : 'All rights reserved.';
+    : 'Ciudades con el mejor clima de Argentina';
 
   return {
     name,
