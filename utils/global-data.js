@@ -5,6 +5,9 @@ export const getGlobalData = () => {
   const blogTitle = process.env.BLOG_TITLE
     ? decodeURI(process.env.BLOG_TITLE)
     : 'SIG - Proyecto 2';
+  const blogTitle2 = process.env.BLOG_TITLE
+    ? decodeURI(process.env.BLOG_TITLE)
+    : 'Ciudades con el mejor clima de Argentina';
   const footerText = process.env.BLOG_FOOTER_TEXT
     ? decodeURI(process.env.BLOG_FOOTER_TEXT)
     : 'Ciudades con el mejor clima de Argentina';
@@ -12,6 +15,7 @@ export const getGlobalData = () => {
   return {
     name,
     blogTitle,
+    blogTitle2,
     footerText,
   };
 };
