@@ -6,5 +6,7 @@ description: "En este apartado se explicará la metodología utilizada para este
 Los siguientes comandos fueron los usados para la importación de los datos de t_min, t_max y prec(en este caso se reemplazan las X por los numeros de año y mes correspondientes)
 
 ```tsx
-backtick.fences('for blocks')
+r.in.gdal input=wc2.1_2.5m_tmin_202X-XX.tif output=tmin_202X-XX -o
+r.in.gdal input=wc2.1_2.5m_tmax_202x-XX.tif output=tmax_202X-XX -o
+r.in.gdal input=wc2.1_2.5m_prec_202X-XX.tif output=prec_202X-XX -o
 ```
