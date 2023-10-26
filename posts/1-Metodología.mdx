@@ -3,10 +3,77 @@ title: Metodología
 description: "En este apartado se explicará la metodología utilizada para este proyecto."
 ---
 
-Los siguientes comandos fueron los usados para la importación de los datos de t_min, t_max y prec(en este caso se reemplazan las X por los numeros de año y mes correspondientes)
+Los siguientes comandos fueron los usados para la importación de los datos de t_min, t_max y prec(en este caso se reemplazan las X por los numeros de año y mes correspondientes):
 
 ```tsx
 r.in.gdal input=wc2.1_2.5m_tmin_202X-XX.tif output=tmin_202X-XX -o
 r.in.gdal input=wc2.1_2.5m_tmax_202x-XX.tif output=tmax_202X-XX -o
 r.in.gdal input=wc2.1_2.5m_prec_202X-XX.tif output=prec_202X-XX -o
 ```
+
+Y se importan los datos del goejson para definir la ubicación, con el siguiente comando:
+
+```tsx
+v.in.ogr input=argentina-with-regions_1413.geojson output=regionsArgentina -o
+```
+
+Con el siguiente comando se importa la frontera detalla da de argentina:
+
+```tsx
+v.in.ogr input=argentina-detailed-boundary_850.geojson output=frontierArgentina -o
+```
+
+Con el siguiente mapa vectorial se añaden los datos correpondientes a los departamentos de Argentina pero no sus fonteras:
+
+```tsx
+v.in.ogr input=departamentos-argentina.topojson output=vectdepartamentosArgentina -o
+```
+
+Con este mapa vectorial se añaden las fronteras correspondientes a los departamentos de argentina:
+
+```tsx
+v.in.ogr input=departamentos-Argentina.geojson output=departamentsArgentina -o
+```
+
+Y recortamos los datos del mapa a solo lo necesario y procedemos a eliminar la capa que no utilizaremos:
+
+```tsx
+v.clip input=vectdepartamentosargentina output=departamentosArgentina clip=frontierArgentina
+```
+
+Con base a el vectorial encontrado se le da forma a la regíon con base al país utilizado.
+
+```tsx
+g.region vect=frontierArgentina
+```
+
+Con este comando se logró una resolcución optima ala hora del mascareo para que no queden pixelados los raster:
+
+```tsx
+g.region res=0.01
+```
+
+De esta manera se "recortan" los datos raster de manera que solo se muestra lo que se encuentra en el territorio de Argentina:
+
+```tsx
+r.mask vector=frontierArgentina
+```
+
+Para aislar los datos a solo lo que se necesita se utilizó los siguientes comandos:
+
+```tsx
+r.mapcalc expression="buenClima-2021-05 = if( "tmin_2021-05@PERMANENT" > 10 && "tmax_2021-05@PERMANENT" < 30 && "prec_2021-05@PERMANENT" <= 15)"
+r.mapcalc.simple expression="if(tmax_2020-01 > 10 && tmin_2020-01 < 30 && prec_2020-01 <= 15, 1, null())" output=buenClima-2020-01
+```
+
+Esto crea una máscara llamada buenClima-2020-01 que representa las áreas donde la temperatura es mayor a 10°C, menor a 30°C y la precipitación es no superior a 15 mm/hora. Puedes utilizar esta máscara para extraer o realizar análisis específicos en las áreas que cumplen con todas estas condiciones. 
+Con estos comandos se recopilaron los datos de cada mes donde se cumplian los parámetro correspondientes que se pidieron para este proyecto y con los datos recopilados se hace la unión correspondiente.
+Con estos datos se muestran las resultados de dicha investigación, donde se muestran las regiones que contienen las temperaturas y precipitación óptima.
+
+En caso de querer verificar de forma manual los datos de cada punto en el mapa se puede usar el siguiente comando:
+
+```tsx
+r.what map=<nombre-de-la-mapa> coordinates=X,Y
+```
+
+
